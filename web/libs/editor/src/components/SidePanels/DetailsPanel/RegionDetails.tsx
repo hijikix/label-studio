@@ -1,5 +1,5 @@
 import { Typography } from "antd";
-import { observer } from "mobx-react";
+import { inject, observer } from "mobx-react";
 import { type FC, useEffect, useMemo, useRef } from "react";
 import { Block, Elem, useBEM } from "../../../utils/bem";
 import { RegionEditor } from "./RegionEditor";
@@ -95,14 +95,15 @@ export const RegionDetailsMain: FC<{ region: any }> = observer(({ region }) => {
 });
 
 type RegionDetailsMetaProps = {
+  store: any;
   region: any;
   editMode?: boolean;
   cancelEditMode?: () => void;
   enterEditMode?: () => void;
 };
 
-export const RegionDetailsMeta: FC<RegionDetailsMetaProps> = observer(
-  ({ region, editMode, cancelEditMode, enterEditMode }) => {
+export const RegionDetailsMeta: FC<RegionDetailsMetaProps> = inject("store")(observer(
+  ({ store, region, editMode, cancelEditMode, enterEditMode }) => {
     const bem = useBEM();
     const input = useRef<HTMLTextAreaElement | null>();
 
@@ -119,6 +120,33 @@ export const RegionDetailsMeta: FC<RegionDetailsMetaProps> = observer(
         current.setSelectionRange(current.value.length, current.value.length);
       }
     }, [editMode]);
+
+    const handleKeyDown = (event: any) => {
+      if (event.key === 'n') {
+        console.log('nキーが押されました');
+
+        // メタデータのカウンターを入力
+        saveMeta(store.metaOrderCounter.toString());
+
+        // カウンターをインクリメント
+        store.incrementMetaOrderCounter();
+      }
+      if (event.key === 'm') {
+        console.log('mキーが押されました');
+
+        // カウンターをリセット
+        store.resetMetaOrderCounter();
+      }
+    };
+
+    // ショートカットキーはこのコンポーネントがマウントされた時にのみ有効にする
+    useEffect(() => {
+      window.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }, []);
 
     return (
       <>
@@ -176,4 +204,4 @@ export const RegionDetailsMeta: FC<RegionDetailsMetaProps> = observer(
     //   </>
     // );
   },
-);
+));

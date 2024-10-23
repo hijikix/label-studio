@@ -29,6 +29,7 @@ const LabelOnBbox = ({
   onMouseLeaveLabel,
   adjacent = false,
   isTexting = false,
+  metaText = undefined,
 }) => {
   const fontSize = 13;
   const height = 20;
@@ -93,7 +94,7 @@ const LabelOnBbox = ({
     [adjacent, isSticking, maxWidth],
   );
 
-  if (!showLabels) return null;
+  if (!showLabels && !metaText) return null;
 
   return (
     <Group strokeScaleEnabled={false} x={x} y={y} rotation={rotation}>
@@ -130,7 +131,7 @@ const LabelOnBbox = ({
         <Tag fill={color} cornerRadius={4} sceneFunc={tagSceneFunc} offsetX={paddingLeft} />
         <Text
           ref={setTextEl}
-          text={text}
+          text={metaText || text}
           fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif"
           fontSize={fontSize}
           lineHeight={(1 / fontSize) * height}
@@ -195,6 +196,7 @@ const LabelOnRect = observer(({ item, color, strokewidth }) => {
       maxWidth={obj.internalToCanvasX(item.width) + strokewidth}
       adjacent
       onClickLabel={item.onClickLabel}
+      metaText={item.meta.text && item.meta.text}
     />
   );
 });
