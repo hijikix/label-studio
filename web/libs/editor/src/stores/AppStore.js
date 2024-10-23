@@ -158,6 +158,9 @@ export default types
     queueTotal: types.optional(types.number, 0),
 
     queuePosition: types.optional(types.number, 0),
+
+    // roka専用の読み順カウンター
+    metaOrderCounter: types.optional(types.number, 1)
   })
   .preProcessSnapshot((sn) => {
     // This should only be handled if the sn.user value is an object, and converted to a reference id for other
@@ -932,6 +935,19 @@ export default types
       self.setUsers(uniqBy([...newUsers, ...oldUsers], "id"));
     }
 
+    // カウンタ操作関数群
+    function incrementMetaOrderCounter() {
+      self.metaOrderCounter++;
+    }
+
+    function resetMetaOrderCounter() {
+      self.metaOrderCounter = 1;
+    }
+
+    function setMetaOrderCounter(counter) {
+      self.metaOrderCounter = counter;
+    }
+
     return {
       setFlags,
       addInterface,
@@ -960,6 +976,10 @@ export default types
       setUsers,
       mergeUsers,
       enrichUsers,
+
+      incrementMetaOrderCounter,
+      resetMetaOrderCounter,
+      setMetaOrderCounter,
 
       showModal,
       toggleComments,

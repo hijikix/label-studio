@@ -1113,32 +1113,46 @@ const EntireStage = observer(
       };
     }
 
+    // 新しいページになったタイミングで連番を初期化する
+    useEffect(() => {
+      console.log('call resetMetaOrderCounter');
+      store.resetMetaOrderCounter();
+    }, []);
+
     return (
-      <Stage
-        ref={(ref) => {
-          item.setStageRef(ref);
-        }}
-        className={[styles["image-element"], ...imagePositionClassnames].join(" ")}
-        width={size.width}
-        height={size.height}
-        scaleX={item.zoomScale}
-        scaleY={item.zoomScale}
-        x={position.x}
-        y={position.y}
-        offsetX={item.stageTranslate.x}
-        offsetY={item.stageTranslate.y}
-        rotation={item.rotation}
-        onClick={onClick}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        onDragMove={onDragMove}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onWheel={onWheel}
-      >
-        <StageContent item={item} store={store} state={state} crosshairRef={crosshairRef} />
-      </Stage>
+      <>
+        {/* カウンタを表示 */}
+        <div>
+          counter: {store.metaOrderCounter}<br />
+          n: input<br />
+          m: reset<br />
+        </div>
+        <Stage
+          ref={(ref) => {
+            item.setStageRef(ref);
+          }}
+          className={[styles["image-element"], ...imagePositionClassnames].join(" ")}
+          width={size.width}
+          height={size.height}
+          scaleX={item.zoomScale}
+          scaleY={item.zoomScale}
+          x={position.x}
+          y={position.y}
+          offsetX={item.stageTranslate.x}
+          offsetY={item.stageTranslate.y}
+          rotation={item.rotation}
+          onClick={onClick}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          onDragMove={onDragMove}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={onMouseUp}
+          onWheel={onWheel}
+        >
+          <StageContent item={item} store={store} state={state} crosshairRef={crosshairRef} />
+        </Stage>
+      </>
     );
   },
 );
